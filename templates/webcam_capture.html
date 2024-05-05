@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Capture</title>
+    <!--use sytlesheet for styling the web-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Capture Image from Webcam</h1>
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="snap">Capture</button>
+    <canvas id="canvas" width="640" height="480"></canvas>
+
+    <!--specify form to upload image through post method-->
+    <form action="{{ url_for('upload_image') }}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="file" id="hiddenImageData">
+        <input type="submit" value="Upload Image" id="uploadBtn">
+    </form>
+
+    <!-- specify script for javascript programming-->
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <a href="{{ url_for('index') }}">Back to Home</a>
+</body>
+</html>

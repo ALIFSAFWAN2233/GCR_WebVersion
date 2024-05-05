@@ -1,0 +1,13 @@
+GCR_Web App
+
+SETTLED
+--> Integration Model and Model Functionality
+
+TO DO
+--> FrontEnd web design (maybe Vue.js)
+--> Chord Tablature..... Collection For Each Major chords (Database)
+--> Real Time Chord Prediction
+--> Video Chord Prediction
+--> Fine tune CNN model
+
+

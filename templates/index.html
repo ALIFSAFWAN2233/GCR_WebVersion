@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Welcome to the Guitar Chord Recognition Web App</h1>
+    <p>This web app provide a service for new guitarist's to help recognize guitar chords through pictures</p>
+    <div>
+        <a href="{{ url_for('upload_file') }}"><button>Upload Image from File Explorer</button></a>
+        <a href="{{ url_for('webcam_capture') }}"><button>Capture Image Through Webcam</button></a>
+    </div>
+</body>
+</html>
