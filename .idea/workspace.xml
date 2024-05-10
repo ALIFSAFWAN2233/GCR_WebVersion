@@ -4,18 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="696ecf5d-fc51-46e0-9637-72080da97dce" name="Changes" comment="Integrating YOLO and classifier model for single image recognition">
-      <change afterPath="$PROJECT_DIR$/templates/display_result_video.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/video_upload.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plan.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Plan.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/scripts.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/scripts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/cropped_image.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/display_image.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/display_image.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/webcam_capture.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/webcam_capture.html" afterDir="false" />
-    </list>
+    <list default="true" id="696ecf5d-fc51-46e0-9637-72080da97dce" name="Changes" comment="A little update" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -33,9 +22,13 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
+  &quot;history&quot;: [
+    {
+      &quot;state&quot;: &quot;OPEN&quot;
+    }
+  ],
   &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;ALIFSAFWAN2233&quot;
+    &quot;state&quot;: &quot;OPEN&quot;
   }
 }</component>
   <component name="GithubPullRequestsUISettings">{
@@ -137,12 +130,21 @@
       <option name="project" value="LOCAL" />
       <updated>1714917309232</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="A little update">
+      <option name="closed" value="true" />
+      <created>1715331049870</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1715331049870</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Integrating YOLO and classifier model for single image recognition" />
-    <option name="LAST_COMMIT_MESSAGE" value="Integrating YOLO and classifier model for single image recognition" />
+    <MESSAGE value="A little update" />
+    <option name="LAST_COMMIT_MESSAGE" value="A little update" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
