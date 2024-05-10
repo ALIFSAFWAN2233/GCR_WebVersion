@@ -7,6 +7,8 @@ from PIL import Image
 from flask import Flask, render_template, request, redirect
 from ultralytics import YOLO
 import tensorflow as tf
+import tempfile
+from flask import jsonify
 
 app = Flask(__name__)
 
@@ -32,18 +34,65 @@ def webcam_capture():
     return render_template('webcam_capture.html')
 
 
+@app.route('/video_upload')
+def video_upload():
+    return render_template('video_upload.html')
+
+
+@app.route('/upload_video', methods=['POST'])
+# perform prediction on video
+def upload_video():
+    if 'video' not in request.files:
+        return redirect(request.url)
+    video_file = request.files['video']
+    if video_file.filename == '':
+        return redirect(request.url)
+
+    #Read the video file
+
+    video_bytes = video_file.read()
+
+    video_array = np.frombuffer(video_bytes, np.uint8)
+
+    with tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as temp_file:
+        temp_file.write(video_bytes)
+        temp_file_path = temp_file.name
+
+
+    # Crate instance to capture video
+    video_capture = cv2.VideoCapture(temp_file_path)
+
+    predictions = []
+
+    while True:
+        ret, frame = video_capture.read()
+        if not ret:
+            break
+
+        #segmentation
+        bboxSegment = modelSegment.predict(source=frame)
+
+        cropped = extract_bounding_box(bboxSegment)
+        if cropped is None:
+            print("No bbox detected in the frame.")
+            continue
+        else:
+            #Preprocess 4 classification
+            cnn_input = preprocess_classifier(cropped)
+
+            # Perform classification
+            prediction = modelClassifier.predict(cnn_input)
+
+            #Extract result
+            prediction_class = determine_chord(prediction)
+            predictions.append(prediction_class)
+
+    return jsonify(predictions=predictions)
+
+
 @app.route('/upload', methods=['POST'])
 # perform prediction
 def upload_image():
-    class_mapping = {
-        0: 'Chord A',
-        1: 'Chord B',
-        2: 'Chord C',
-        3: 'Chord D',
-        4: 'Chord E',
-        5: 'Chord F',
-        6: 'Chord G',
-    }
     if 'file' not in request.files:
         return redirect(request.url)
     file = request.files['file']
@@ -53,45 +102,37 @@ def upload_image():
         imgBytes = file.read()
 
         img = Image.open(BytesIO(imgBytes))
-        #img = preprocess_yolo(img)
         img_array_yolo = np.array(img)
         bboxSegment = modelSegment.predict(source=img_array_yolo)
 
-        if bboxSegment and len(bboxSegment[0]) > 0:
-            # Get the first result
-            result = bboxSegment[0]
-            original_img = np.copy(result.orig_img)
+        croppedimg = extract_bounding_box(bboxSegment)
 
-            # Get bounding box coordinates of the first detected object
-            obj = result[0]  # Get the first detected object
-            x1, y1, x2, y2 = obj.boxes.xyxy.cpu().numpy().squeeze().astype(np.int32)
+        feature_extracted_img = preprocess_classifier(croppedimg)
 
-            # Crop image to the bounding box
-            cropped_img = original_img[y1:y2, x1:x2]
+        prediction = modelClassifier.predict(feature_extracted_img)
 
-            # Preprocess the cropped image for classifier detection
-            classifier_input = preprocess_classifier(cropped_img)
+        predicted_class_name = determine_chord(prediction)
 
-            prediction = modelClassifier.predict(classifier_input)
+        return render_template('display_image.html', predicted_chord=predicted_class_name)
 
-            #Extract the prediction based on the class
-
-            #Extract the highest probability from the prediction
-            chord_prediction_index = np.argmax(prediction)
-
-            predicted_class_name = class_mapping[chord_prediction_index]
-
-            return render_template('display_image.html', predicted_chord=predicted_class_name)
-        return "No object detected"
-    return "Invalid File"
+    return "No object detected"
 
 
-def preprocess_yolo(img):
-    # Implement preprocessing image for yolo
-    # Resize the image into 704 width and height
-    resized_image = img.resize((704, 704))
+def extract_bounding_box(boundingbox):
+    # Extract and crop the image based on bounding box
+    if boundingbox and len(boundingbox[0]) > 0:
+        # Get the first result
+        result = boundingbox[0]
+        original_img = np.copy(result.orig_img)
 
-    return resized_image
+        # Get bounding box coordinates of the first detected object
+        obj = result[0]  # Get the first detected object
+        x1, y1, x2, y2 = obj.boxes.xyxy.cpu().numpy().squeeze().astype(np.int32)
+
+        # Crop image to the bounding box
+        cropped_img = original_img[y1:y2, x1:x2]
+
+        return cropped_img
 
 
 def preprocess_classifier(img):
@@ -118,6 +159,23 @@ def preprocess_classifier(img):
     resized_img_expanded = np.expand_dims(resized_img_normalized, axis=0)
 
     return resized_img_expanded
+
+
+def determine_chord(pred):
+    class_mapping = {
+        0: 'Chord A',
+        1: 'Chord B',
+        2: 'Chord C',
+        3: 'Chord D',
+        4: 'Chord E',
+        5: 'Chord F',
+        6: 'Chord G',
+    }
+    chord_prediction_index = np.argmax(pred)
+
+    predicted_class_name = class_mapping[chord_prediction_index]
+
+    return predicted_class_name
 
 
 if __name__ == '__main__':

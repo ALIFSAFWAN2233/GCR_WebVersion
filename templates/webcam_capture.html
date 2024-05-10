@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webcam Capture</title>
-    <!--use sytlesheet for styling the web-->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Capture Image from Webcam</title>
 </head>
 <body>
     <h1>Capture Image from Webcam</h1>
@@ -13,14 +11,61 @@
     <button id="snap">Capture</button>
     <canvas id="canvas" width="640" height="480"></canvas>
 
-    <!--specify form to upload image through post method-->
+    <!-- Specify form to upload image through post method -->
     <form action="{{ url_for('upload_image') }}" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="file" id="hiddenImageData">
+        <input name="file" id="ImageData">
         <input type="submit" value="Upload Image" id="uploadBtn">
     </form>
 
-    <!-- specify script for javascript programming-->
-    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <!-- Specify script for JavaScript programming -->
+    <script>
+        // Paste your JavaScript code here
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const snap = document.getElementById('snap');
+        const uploadCaptured = document.getElementById('uploadBtn');
+        const context = canvas.getContext('2d');
+
+        // Get access to the camera
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    video.srcObject = stream;
+                    video.play();
+                    console.log('Webcam Active');
+                })
+                .catch(function(error) {
+                    console.error('Error accessing the webcam:', error);
+                });
+        }
+
+        // Capture the photo
+        snap.addEventListener("click", function() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            console.log('Captured Image');
+        });
+
+        // Upload the captured image
+        uploadCaptured.addEventListener('click', function() {
+            canvas.toBlob(function(blob) {
+                const formData = new FormData();
+                formData.append('file', blob, 'capture.png');
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }, 'image/png');
+        });
+    </script>
     <a href="{{ url_for('index') }}">Back to Home</a>
 </body>
 </html>
