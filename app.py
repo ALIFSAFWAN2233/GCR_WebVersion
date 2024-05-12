@@ -1,6 +1,6 @@
 import base64
 from io import BytesIO
-
+import certifi
 import cv2
 import numpy as np
 from PIL import Image
@@ -9,6 +9,9 @@ from ultralytics import YOLO
 import tensorflow as tf
 import tempfile
 from flask import jsonify
+from pymongo.mongo_client import MongoClient
+
+from database import fetch_chord_data, convert_bytes_to_base64
 
 app = Flask(__name__)
 
@@ -57,7 +60,6 @@ def upload_video():
     with tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as temp_file:
         temp_file.write(video_bytes)
         temp_file_path = temp_file.name
-
 
     # Crate instance to capture video
     video_capture = cv2.VideoCapture(temp_file_path)
@@ -113,7 +115,29 @@ def upload_image():
 
         predicted_class_name = determine_chord(prediction)
 
-        return render_template('display_image.html', predicted_chord=predicted_class_name)
+        chord_Object = fetch_chord_data(predicted_class_name)
+
+        open_chord = chord_Object.tablature_pictures[0]
+        root = chord_Object.tablature_pictures[1]
+        first = chord_Object.tablature_pictures[2]
+        second = chord_Object.tablature_pictures[3]
+
+        #html markup
+        open_chord_image = convert_bytes_to_base64(open_chord["data"])
+        root_image = convert_bytes_to_base64(root["data"])
+        first_image = convert_bytes_to_base64(first["data"])
+        second_image = convert_bytes_to_base64(second["data"])
+
+        desc_open = open_chord["description"]
+        desc_root = root["description"]
+        desc_first = first["description"]
+        desc_second = second["description"]
+
+        return render_template('display_image.html', predicted_chord=predicted_class_name,
+                               chord_name=chord_Object.chord_name, video_link=chord_Object.tutorial_video_link,
+                               open_chord_image=open_chord_image, root_image=root_image, first_image=first_image,
+                               second_image=second_image, desc_open=desc_open, desc_root=desc_root,
+                               desc_first=desc_first, desc_second=desc_second)
 
     return "No object detected"
 
@@ -133,6 +157,8 @@ def extract_bounding_box(boundingbox):
         cropped_img = original_img[y1:y2, x1:x2]
 
         return cropped_img
+
+    # need to add error handling if bounding box is not detected
 
 
 def preprocess_classifier(img):
@@ -160,6 +186,8 @@ def preprocess_classifier(img):
 
     return resized_img_expanded
 
+    # need to add error handling if there is no cropped image
+
 
 def determine_chord(pred):
     class_mapping = {
@@ -176,6 +204,8 @@ def determine_chord(pred):
     predicted_class_name = class_mapping[chord_prediction_index]
 
     return predicted_class_name
+
+    # add error handling
 
 
 if __name__ == '__main__':

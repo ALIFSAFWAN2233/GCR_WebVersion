@@ -16,9 +16,9 @@ try:
     #Navigate to the chordCollection - contains the collection of individual JSONs
     collection = db['ChordCollection']
 
-    # Read binary data from image file
-    # A major chord tablatures (Inversions)
 
+    # A major chord tablatures (Inversions)
+    # Read binary data from image file
     with open('C:/Users/alifs/GCR_WebVersion/inversionsPic/B major open chord.png', 'rb') as f:
         open_bytes = base64.b64encode(f.read())
     with open('C:/Users/alifs/GCR_WebVersion/inversionsPic/B major root tab.png', 'rb') as f:
