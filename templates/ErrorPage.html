@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error Loading File Page</title>
+</head>
+<body>
+    <h1>Error</h1>
+<p>It seems that there is a problem:</p>
+<p>The error is: {{ error_message }}</p>
+    <p>Please try again by uploading the file again.</p>
+
+<a href="{{ url_for('index') }}">Redirect Back to Home</a>
+</body>
+</html>
