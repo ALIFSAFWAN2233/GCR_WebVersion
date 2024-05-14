@@ -7,6 +7,9 @@ TO DO
 --> FrontEnd web design (maybe Vue.js)
 --> Chord Tablature..... Collection For Each Major chords (Database)
 
+Username: AlifDB
+password: alifnadillah1404
+connection string: mongodb+srv://AlifDB:alif@adillah1404@chorddatabase.t0jwv4a.mongodb.net/?retryWrites=true&w=majority&appName=ChordDatabase
 
 sample json:
 {
@@ -31,8 +34,8 @@ import base64
 
 # Connect to MongoDB
 client = MongoClient('mongodb://localhost:27017/')
-db = client['chords_database']
-collection = db['chords_collection']
+db = client['GCR_database']
+collection = db['ChordCollection']
 
 # Read binary data from image file
 with open('c_major_tablature_1.jpg', 'rb') as f:

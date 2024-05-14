@@ -1,6 +1,6 @@
 import base64
 from io import BytesIO
-
+import certifi
 import cv2
 import numpy as np
 from PIL import Image
@@ -9,6 +9,9 @@ from ultralytics import YOLO
 import tensorflow as tf
 import tempfile
 from flask import jsonify
+from pymongo.mongo_client import MongoClient
+
+from database import fetch_chord_data, convert_bytes_to_base64
 
 app = Flask(__name__)
 
@@ -29,9 +32,9 @@ def upload_file():
     return render_template('upload_file.html')
 
 
-@app.route('/webcam-capture')
-def webcam_capture():
-    return render_template('webcam_capture.html')
+#@app.route('/webcam-capture')
+#def webcam_capture():
+#    return render_template('webcam_capture.html')
 
 
 @app.route('/video_upload')
@@ -58,11 +61,14 @@ def upload_video():
         temp_file.write(video_bytes)
         temp_file_path = temp_file.name
 
-
     # Crate instance to capture video
     video_capture = cv2.VideoCapture(temp_file_path)
 
+    #store predictions detected in the whole video
     predictions = []
+
+    #Shortlist the most chords that is relevant
+    #Based on the list, show Extra chord information for each chords
 
     while True:
         ret, frame = video_capture.read()
@@ -103,19 +109,62 @@ def upload_image():
 
         img = Image.open(BytesIO(imgBytes))
         img_array_yolo = np.array(img)
+        #need to add code to ensure that the img_array is in 3 channels
+        img_array_yolo = ensure_three_channels(img_array_yolo)
+
         bboxSegment = modelSegment.predict(source=img_array_yolo)
 
-        croppedimg = extract_bounding_box(bboxSegment)
+        if bboxSegment is None or len(bboxSegment) == 0:
+            return render_template('ErrorPage.html', error_message="No Bounding Box Detected")
 
-        feature_extracted_img = preprocess_classifier(croppedimg)
+        try:
 
-        prediction = modelClassifier.predict(feature_extracted_img)
+            #Crop image based on the bounding box detected by YOLO model
+            croppedimg = extract_bounding_box(bboxSegment)
 
-        predicted_class_name = determine_chord(prediction)
+            #Apply sobel and appropriate preprocessing for classifier
+            feature_extracted_img = preprocess_classifier(croppedimg)
 
-        return render_template('display_image.html', predicted_chord=predicted_class_name)
+            #Classifier perform prediction
+            prediction = modelClassifier.predict(feature_extracted_img)
 
-    return "No object detected"
+            predicted_class_name = determine_chord(prediction)
+
+            #Fetch chord information based on the prediction
+            chord_Object = fetch_chord_data(predicted_class_name)
+
+            #if error detected because of pyMongo connection/chord information cant be fetched/no chord data exist
+            #go to errorpage.html
+
+            if isinstance(chord_Object, dict) and "error" in chord_Object:
+                return render_template('ErrorPage.html', error_message=chord_Object["error"])
+            else:
+
+                open_chord = chord_Object.tablature_pictures[0]
+                root = chord_Object.tablature_pictures[1]
+                first = chord_Object.tablature_pictures[2]
+                second = chord_Object.tablature_pictures[3]
+
+                #html markup
+                open_chord_image = convert_bytes_to_base64(open_chord["data"])
+                root_image = convert_bytes_to_base64(root["data"])
+                first_image = convert_bytes_to_base64(first["data"])
+                second_image = convert_bytes_to_base64(second["data"])
+
+                desc_open = open_chord["description"]
+                desc_root = root["description"]
+                desc_first = first["description"]
+                desc_second = second["description"]
+
+            return render_template('display_image.html', predicted_chord=predicted_class_name,
+                                   chord_name=chord_Object.chord_name, video_link=chord_Object.tutorial_video_link,
+                                   open_chord_image=open_chord_image, root_image=root_image, first_image=first_image,
+                                   second_image=second_image, desc_open=desc_open, desc_root=desc_root,
+                                   desc_first=desc_first, desc_second=desc_second)
+        except Exception as e:
+            return render_template('ErrorPage.html', error_message = "Error because no bounding box detected 2.0")
+
+    return render_template('ErrorPage.html', error_messsage="No file is detected and uploaded.")
 
 
 def extract_bounding_box(boundingbox):
@@ -133,6 +182,8 @@ def extract_bounding_box(boundingbox):
         cropped_img = original_img[y1:y2, x1:x2]
 
         return cropped_img
+
+    # need to add error handling if bounding box is not detected
 
 
 def preprocess_classifier(img):
@@ -159,6 +210,7 @@ def preprocess_classifier(img):
     resized_img_expanded = np.expand_dims(resized_img_normalized, axis=0)
 
     return resized_img_expanded
+    # need to add error handling if there is no cropped image
 
 
 def determine_chord(pred):
@@ -176,6 +228,16 @@ def determine_chord(pred):
     predicted_class_name = class_mapping[chord_prediction_index]
 
     return predicted_class_name
+
+    # add error handling
+
+
+def ensure_three_channels(image):
+    if image.shape[2] == 4:  # Check if the image has 4 channels (RGBA)
+        image = cv2.cvtColor(image, cv2.COLOR_RGBA2RGB)
+    elif image.shape[2] == 1:  # Check if the image has 1 channel (grayscale)
+        image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+    return image
 
 
 if __name__ == '__main__':

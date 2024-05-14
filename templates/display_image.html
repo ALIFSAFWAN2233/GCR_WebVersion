@@ -7,5 +7,22 @@
 <body>
     <h1>Predicted Chord</h1>
     <h3>Predicted Guitar Chord: {{ predicted_chord }}</h3>
+
+<h1>More About The Chord</h1>
+
+<h3>Chord Name: {{ chord_name }}</h3>
+<p> The {{ chord_name }} can be played in different way.</p>
+<h2>This is the standard 'open' shape to play {{ chord_name }} chord.</h2>
+<img src="{{ open_chord_image }}" alt="{{desc_open}}">
+<h2>Triads</h2>
+<p>{{ chord_name }} can be played in triads shape.</p>
+<h2>Root Triad</h2>
+<img src="{{ root_image }}" alt="{{desc_root}}">
+<h2>First Inversion Triad</h2>
+<img src="{{ first_image }}" alt="{{desc_first}}">
+<h2>Second Inversion Triad</h2>
+<img src="{{ second_image }}" alt="{{desc_second}}">
+
+
 </body>
 </html>
