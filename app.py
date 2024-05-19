@@ -1,6 +1,7 @@
 import base64
 from io import BytesIO
-import certifi
+import os
+
 import cv2
 import numpy as np
 from PIL import Image
@@ -9,13 +10,16 @@ from ultralytics import YOLO
 import tensorflow as tf
 import tempfile
 from flask import jsonify
+import json
 from pymongo.mongo_client import MongoClient
 
 from database import fetch_chord_data, convert_bytes_to_base64
 
 app = Flask(__name__)
 
-app.config['UPLOAD_FOLDER'] = 'upload/'
+chord_folder = os.path.join('static', 'chord_photo')
+#app.config['UPLOAD_FOLDER'] = 'upload/'
+app.config['UPLOAD_FOLDER'] = chord_folder
 
 modelSegment = YOLO('C:/Users/alifs/Desktop/FYP/GuitarChordRecognition/runs/detect/train29/weights/best.pt')
 modelClassifier = tf.keras.models.load_model(
@@ -36,64 +40,180 @@ def upload_file():
 #def webcam_capture():
 #    return render_template('webcam_capture.html')
 
-
 @app.route('/video_upload')
 def video_upload():
     return render_template('video_upload.html')
 
 
+# prediction based on video uploaded
 @app.route('/upload_video', methods=['POST'])
 # perform prediction on video
 def upload_video():
     if 'video' not in request.files:
-        return redirect(request.url)
+        return jsonify({"error": "No video file part in the request"}), 400
     video_file = request.files['video']
     if video_file.filename == '':
-        return redirect(request.url)
+        return jsonify({"error": "No selected video file"}), 400
 
-    #Read the video file
+    try:
+        #Read the video file
 
-    video_bytes = video_file.read()
+        video_bytes = video_file.read()
 
-    video_array = np.frombuffer(video_bytes, np.uint8)
+        video_array = np.frombuffer(video_bytes, np.uint8)
 
-    with tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as temp_file:
-        temp_file.write(video_bytes)
-        temp_file_path = temp_file.name
+        with tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as temp_file:
+            temp_file.write(video_bytes)
+            temp_file_path = temp_file.name
 
-    # Crate instance to capture video
-    video_capture = cv2.VideoCapture(temp_file_path)
+        # Crate instance to capture video
+        video_capture = cv2.VideoCapture(temp_file_path)
 
-    #store predictions detected in the whole video
-    predictions = []
+        #store predictions detected in the whole video
+        predictions = []
 
-    #Shortlist the most chords that is relevant
-    #Based on the list, show Extra chord information for each chords
+        #iterate through all frames in the video
+        while True:
+            ret, frame = video_capture.read()
+            if not ret:
+                break
 
-    while True:
-        ret, frame = video_capture.read()
-        if not ret:
-            break
+            #segmentation
+            bboxSegment = modelSegment.predict(source=frame)
 
-        #segmentation
-        bboxSegment = modelSegment.predict(source=frame)
+            cropped = extract_bounding_box(bboxSegment)
+            if cropped is None:
+                print("No bbox detected in the frame.")
+                continue
+            else:
+                #Preprocess 4 classification
+                cnn_input = preprocess_classifier(cropped)
 
-        cropped = extract_bounding_box(bboxSegment)
-        if cropped is None:
-            print("No bbox detected in the frame.")
-            continue
+                # Perform classification
+                prediction = modelClassifier.predict(cnn_input)
+
+                #Extract result
+                prediction_class = determine_chord(prediction)
+                predictions.append(prediction_class)
+
+        video_capture.release()
+        #PREDICTION ACHIEVED
+        print("Predictions: ", predictions)
+
+        # pass predictions array (contain chord_name,link,and description only)
+        chords_data_list = render_chords_page(predictions)
+
+        print("Chords Data before being passed: ", chords_data_list)
+
+        return jsonify({"success": True, "chords_data": chords_data_list})
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return jsonify({"error: ": str(e)}), 500
+
+
+def render_chords_page(prediction):
+    # Shortlist the most relevant chords
+    shortlist_chords = shortlist_chord(prediction)
+
+    # List to store chord information
+    chords_data = []
+
+    for chord in shortlist_chords:
+        # Fetch data for each element in the array
+        # holds chord object
+        #retrieve only name, link, and description
+        chord_Object = fetch_chord_data(chord)
+
+        if isinstance(chord_Object, dict) and "error" in chord_Object:
+            return render_template('ErrorPage.html', error_message=chord_Object["error"])
         else:
-            #Preprocess 4 classification
-            cnn_input = preprocess_classifier(cropped)
 
-            # Perform classification
-            prediction = modelClassifier.predict(cnn_input)
+            # Extract information
+            open_chord = chord_Object.tablature_pictures[0]
+            root = chord_Object.tablature_pictures[1]
+            first = chord_Object.tablature_pictures[2]
+            second = chord_Object.tablature_pictures[3]
 
-            #Extract result
-            prediction_class = determine_chord(prediction)
-            predictions.append(prediction_class)
+            # Convert images to base64
+            open_chord_image = convert_bytes_to_base64(open_chord["data"])
+            root_image = convert_bytes_to_base64(root["data"])
+            first_image = convert_bytes_to_base64(first["data"])
+            second_image = convert_bytes_to_base64(second["data"])
 
-    return jsonify(predictions=predictions)
+            # Descriptions
+            desc_open = open_chord["description"]
+            desc_root = root["description"]
+            desc_first = first["description"]
+            desc_second = second["description"]
+
+            # Store chord information in a dictionary
+            # Replace the base 64 images for url of the images
+            chord_info = {
+                "chord_name": chord_Object.chord_name,
+                "video_link": chord_Object.tutorial_video_link,
+                "open_chord_image": open_chord_image,
+                "root_image": root_image,
+                "first_image": first_image,
+                "second_image": second_image,
+                "desc_open": desc_open,
+                "desc_root": desc_root,
+                "desc_first": desc_first,
+                "desc_second": desc_second
+            }
+
+        # Append the chord information to the list
+        if not any(existing_chord["chord_name"] == chord_info['chord_name'] for existing_chord in chords_data):
+            chords_data.append(chord_info)
+
+    print("Chords Data: ", chords_data)
+    return chords_data
+
+
+@app.route('/display_result_video', methods=['GET'])
+def display_result_video():
+    chords_data = request.args.get('chords_data')
+    if chords_data:
+        chords_data = json.loads(chords_data)
+    print("Chords Data received in /display_result_video:", chords_data)  # Debugging log
+    return render_template('display_result_video.html', chords_data=chords_data)
+
+
+def shortlist_chord(predArray):
+    #accept array parameter
+    #chord counter
+
+    #Initialize a mapping 
+    chord_counters = {
+        'Chord A': 0,
+        'Chord B': 0,
+        'Chord C': 0,
+        'Chord D': 0,
+        'Chord E': 0,
+        'Chord F': 0,
+        'Chord G': 0
+    }
+    #find the frequency of each chords based on prediction array (percentages)
+
+    # Count the occurrences of each chord
+    for chord in predArray:
+        if chord in chord_counters:
+            chord_counters[chord] += 1
+
+    # Calculate the total number of predictions
+    total_predictions = len(predArray)
+
+    #Calculate percentages
+    chord_percentages = {
+        chord: (count / total_predictions) * 100 for chord, count in chord_counters.items()
+    }
+    chord_shortlisted = []
+    #take the highest frequency of chords or more (>25)
+    for chord, percent in chord_percentages.items():
+        if percent >= 25:
+            chord_shortlisted.append(chord)
+    #ACHIEVED
+    print("shortlisted chords: ", chord_shortlisted)
+    return chord_shortlisted
 
 
 @app.route('/upload', methods=['POST'])
@@ -162,7 +282,7 @@ def upload_image():
                                    second_image=second_image, desc_open=desc_open, desc_root=desc_root,
                                    desc_first=desc_first, desc_second=desc_second)
         except Exception as e:
-            return render_template('ErrorPage.html', error_message = "Error because no bounding box detected 2.0")
+            return render_template('ErrorPage.html', error_message="Error because no bounding box detected 2.0")
 
     return render_template('ErrorPage.html', error_messsage="No file is detected and uploaded.")
 

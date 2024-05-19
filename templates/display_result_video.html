@@ -5,7 +5,36 @@
     <title>Predicted Chord Page For Video</title>
 </head>
 <body>
-    <h1>Predicted Chord</h1>
-    <h3>Predicted Guitar Chord: {{ predictions }}</h3>
+    {% if chords_data %}
+        {% for chord in chords_data %}
+            <h1>Predicted Chord: {{ chord.chord_name }}</h1>
+            <div>
+                <h2>{{ chord.desc_open }}</h2>
+                <img src="{{ chord.open_chord_image }}" alt="Open Chord Image">
+            </div>
+            <div>
+                <h2>{{ chord.desc_root }}</h2>
+                <img src="{{ chord.root_image }}" alt="Root Image">
+            </div>
+            <div>
+                <h2>{{ chord.desc_first }}</h2>
+                <img src="{{ chord.first_image }}" alt="First Inversion Image">
+            </div>
+            <div>
+                <h2>{{ chord.desc_second }}</h2>
+                <img src="{{ chord.second_image }}" alt="Second Inversion Image">
+            </div>
+            <div>
+                <h2>Tutorial Video</h2>
+                {% if chord.video_link %}
+                    <a href="{{ chord.video_link }}">Watch Video</a>
+                {% else %}
+                    <p>No tutorial video available.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No chord data available.</p>
+    {% endif %}
 </body>
 </html>
