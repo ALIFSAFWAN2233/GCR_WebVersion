@@ -9,6 +9,8 @@
 <body>
     <h1>Upload Image from Your Computer</h1>
 
+
+
     <!-- form using Post method to send the data to the javascript -->
     <form action="{{ url_for('upload_image') }}" method="post" enctype="multipart/form-data">
         <input type="file" name="file" id="file" accept="image/*">

@@ -4,16 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="./static/output.css">
 </head>
-<body>
-    <h1>Welcome to the Guitar Chord Recognition Web App</h1>
-    <p>This web app provide a service for new guitarist's to help recognize guitar chords through pictures</p>
+<body class="bg-gray-900">
+<div class="container mx-auto"><!-- Full the user screen -->
+    <div class="text-center"> <h1 class="text-4xl font-bold">Enhance Your Guitar Learning Journey</h1>
+    <h1 class="text-4xl font-bold text-green-600">With AI</h1></div>
+</div>
+    <p class="text-sm text-center">This web app prototype integrates machine learning model to help recognize guitar chord through
+    images and videos</p>
+
+
+<!-- Reveal below elements when user scroll down -->
+    <h2>Try it out </h2>
+
     <div>
         <a href="{{ url_for('upload_file') }}"><button>Upload Image from File Explorer</button></a>
 
         <a href="{{ url_for('video_upload') }}"><button>Upload Video from File Explorer</button></a>
-        <!-- Can consider to add real time predction feature -->
+        <!-- Can consider to add real time prediction feature -->
 
     </div>
 </body>

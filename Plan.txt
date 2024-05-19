@@ -2,10 +2,19 @@ GCR_Web App
 
 SETTLED
 --> Integration Model and Model Functionality
-
+--> Chord Tablature..... Collection For Each Major chords (Database)
 TO DO
 --> FrontEnd web design (maybe Vue.js)
---> Chord Tablature..... Collection For Each Major chords (Database)
+--> Real Time Chord Prediction
+--> Video Chord Prediction
+       * need to add progress animation
+--> Fine tune CNN model
+
+
+
+
+
+
 
 Username: AlifDB
 password: alifnadillah1404
@@ -56,11 +65,3 @@ chord_document = {
 # Insert document into collection
 result = collection.insert_one(chord_document)
 print("Inserted document ID:", result.inserted_id)
-
-
---> Real Time Chord Prediction
---> Video Chord Prediction
-       * need to add progress animation
---> Fine tune CNN model
-
-
