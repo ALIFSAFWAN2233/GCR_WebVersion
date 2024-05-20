@@ -9,27 +9,27 @@
 <body class = "bg-hero-bg-gradient fade-in-gradient" >
 
 <!--Top bar-->
-<div class = "fixed top-0 w-full bg-black py-4 px-6 fade-in-left-to-right">
-    <!--Need to add logo or GCR_WebApp text-->
-    <p class = "text-white text-start font-semibold font-sans">GCR_WebApp</p>
+<div class = "fixed top-0 w-full bg-night-black py-4 px-6 fade-in-left-to-right  ">
+    
+    <p class = "text-white text-start font-semibold font-sans lg:text-xl py-1">GCR_WebApp</p>
 
 </div>
 
 <div class=" h-3/4 p-5 mb-8 mt-10 " ><!--Holds the title and description of web app-->
     <div class=" h-full flex flex-col justify-center" ><!-- Full the user screen -->
-        <div class="text-center pt-20 pr-5 pl-5 pb-10"> 
-            <h1 class="text-5xl text-white font-semibold tracking-wide fade-in-from-bottom font-sans">Enhance Your Guitar Learning Journey</h1>
-            <h1 class="text-4xl font-bold text-green-600 pt-5 fade-in-from-bottom font-sans ">With AI</h1>
+        <div class="text-center pt-20 pr-5 pl-5 pb-10 lg:text-start"> 
+            <h1 class="text-5xl text-white font-semibold tracking-wide fade-in-from-bottom font-sans lg:text-6xl">Enhance Your Guitar Learning Journey</h1>
+            <h1 class="text-4xl font-bold text-green-600 pt-5 fade-in-from-bottom font-sans lg:text-5xl  ">With AI</h1>
         </div>
-        <p class="text-xl  font-light tracking-wide text-center text-white px-5 pt-10 pb-10 fade-in-from-bottom ">This web app prototype integrates machine learning model to help recognize guitar chord through
+        <p class="text-xl  font-light tracking-wide text-center text-white px-5 pt-10 pb-10 fade-in-from-bottom lg:text-2xl">This web app prototype integrates machine learning model to help recognize guitar chord through
         images and videos</p>
     </div>
 
 </div>
 
-<div class = "h-1/4 flex flex-col justify-center items-center bg-black  mx-8 rounded-md py-5 px-5 fade-in-from-bottom opacity-500">
+<div class = "h-1/4 flex flex-col justify-center items-center bg-night-black mx-8 rounded-xl py-5 px-5 fade-in-from-bottom opacity-500 lg:mx-40 mb-20 ">
 <!-- Reveal below elements when user scroll down -->
-    <h2 class = "text-white text-xl pb-5 fade-in-from-bottom font-medium">Try it out </h2>
+    <h2 class = "text-white text-xl pb-5 pr-3 fade-in-from-bottom font-medium ">Try it out </h2>
 
     <div class = "space-x-4 fade-in-from-bottom" >
         <a href="{{ url_for('upload_file') }}"><button  class="transition ease-in-out delay-100 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300  text-white font-medium py-2 px-4 rounded-lg  mb-4 md:mb-0 md:mr-4 ">Upload Image</button></a>
@@ -41,7 +41,7 @@
 </div> 
 
 <!--Bottom Bar-->
-<div class = "fixed bottom-0 w-full bg-black py-4 px-6 text-white fade-in-left-to-right">
+<div class = "fixed bottom-0 w-full bg-night-black py-4 px-6 text-white fade-in-left-to-right lg:text-lg">
     <div class = "container mx-auto flex justify-between items-center font-medium">
         <p>FYP PROJECT</p>
         <p>By Alif Safwan</p>
