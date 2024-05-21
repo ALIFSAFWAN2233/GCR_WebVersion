@@ -4,18 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload File</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='output.css') }}">
 </head>
-<body>
-    <h1>Upload Image from Your Computer</h1>
+<body class = "bg-hero-bg-gradient fade-in-gradient">
 
 
+    <!--Top bar-->
+<div class = "sticky top-0 w-full bg-raisin-black py-4 px-6 fade-in-left-to-right rounded-b-md">
 
-    <!-- form using Post method to send the data to the javascript -->
-    <form action="{{ url_for('upload_image') }}" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" id="file" accept="image/*">
-        <input type="submit" value="Upload Image">
-    </form>
-    <a href="{{ url_for('index') }}">Back to Home</a>
+    <p class = "text-white text-start font-semibold font-sans">GCR_WebApp</p>
+
+</div>
+
+<!--main content container-->
+<div class = "flex flex-col justify-center items-center text-white mt-20 px-5 fade-in-from-bottom ">
+
+    <!--Page title-->
+    <h1 class = "text-4xl font-semibold tracking-normal font-san mt-10 mb-10 md:pl-10 md:pt-14 md:text-5xl ">Upload Image from Your Computer</h1>
+
+    <!--Form container-->
+    <div class=" flex flex-col items-center justify-center mt-10 outline outline-offset-2 outline-1 bg-raisin-black rounded-2xl px-5 py-5  md:mt-20  md:px-20 md:py-5 ">
+        <!-- form using Post method to send the data to the javascript -->
+        <form  action="{{ url_for('upload_image') }}" method="post" enctype="multipart/form-data">
+            <input class='bg-blue-500 rounded-lg '  type="file" name="file" id="file" accept="image/*">
+            <input type="submit" value="Upload Image" class="  mt-8 transition ease-in-out delay-100 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300  text-white font-medium py-2 px-4 rounded-lg  mb-4 md:mb-0 md:ml-14 md:mt-0"></a>
+            
+        </form>
+
+    </div>
+
+  <a class='text-white mt-20 transition ease-in-out delay-100 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-green-500 duration-300  font-medium py-2 px-4 rounded-lg ' href="{{ url_for('index') }}">Back to Home</a>
+</div>
+
+  
+
+    <!--Bottom Bar-->
+<div class = "fixed bottom-0 w-full bg-raisin-black py-4 px-6 text-white fade-in-left-to-right ">
+    <div class = "container mx-auto flex justify-between items-center font-medium">
+        <p>FYP PROJECT</p>
+        <p>By Alif Safwan</p>
+    </div>
+</div>
 </body>
+
+<style>
+        @keyframes fadeInFromBottom {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        50% {
+            opacity: 0.5;
+            transform: translateY(10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+    .fade-in-from-bottom {
+        animation: fadeInFromBottom 1s ease-out;
+    }
+
+</style>
+
 </html>
