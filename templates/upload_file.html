@@ -10,9 +10,9 @@
 
 
     <!--Top bar-->
-<div class = "sticky top-0 w-full bg-raisin-black py-4 px-6 fade-in-left-to-right rounded-b-md">
+<div class = "fixed top-0 w-full bg-raisin-black py-4 px-6 fade-in-left-to-right rounded-b-md">
 
-    <p class = "text-white text-start font-semibold font-sans">GCR_WebApp</p>
+    <p class = "text-white text-center font-semibold font-sans md:text-start">GCR_WebApp</p>
 
 </div>
 
@@ -20,20 +20,20 @@
 <div class = "flex flex-col justify-center items-center text-white mt-20 px-5 fade-in-from-bottom ">
 
     <!--Page title-->
-    <h1 class = "text-4xl font-semibold tracking-normal font-san mt-10 mb-10 md:pl-10 md:pt-14 md:text-5xl ">Upload Image from Your Computer</h1>
+    <h1 class = "text-4xl text-center font-semibold tracking-normal font-sans mt-10 mb-10 md:pl-10 md:pt-14 md:text-5xl ">Upload Image from Your Computer</h1>
 
     <!--Form container-->
-    <div class=" flex flex-col items-center justify-center mt-10 outline outline-offset-2 outline-1 bg-raisin-black rounded-2xl px-5 py-5  md:mt-20  md:px-20 md:py-5 ">
+    <div class="bg-raisin-black outline outline-offset-2 outline-1 rounded-2xl px-5 py-5 my-20  md:mt-10  md:px-20 md:py-5 ">
         <!-- form using Post method to send the data to the javascript -->
         <form  action="{{ url_for('upload_image') }}" method="post" enctype="multipart/form-data">
-            <input class='bg-blue-500 rounded-lg '  type="file" name="file" id="file" accept="image/*">
-            <input type="submit" value="Upload Image" class="  mt-8 transition ease-in-out delay-100 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300  text-white font-medium py-2 px-4 rounded-lg  mb-4 md:mb-0 md:ml-14 md:mt-0"></a>
+            <input class=' '  type="file" name="file" id="file" accept="image/*">
+            <input type="submit" value="Upload Image" class=" transition ease-in-out delay-100 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300  text-white font-medium py-2 px-4 rounded-lg  "></a>
             
         </form>
 
     </div>
 
-  <a class='text-white mt-20 transition ease-in-out delay-100 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-green-500 duration-300  font-medium py-2 px-4 rounded-lg ' href="{{ url_for('index') }}">Back to Home</a>
+  <a class='text-white transition ease-in-out delay-100 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-green-500 duration-300  font-medium py-2 px-4 rounded-lg ' href="{{ url_for('index') }}">Back to Home</a>
 </div>
 
   
@@ -45,6 +45,7 @@
         <p>By Alif Safwan</p>
     </div>
 </div>
+
 </body>
 
 <style>
