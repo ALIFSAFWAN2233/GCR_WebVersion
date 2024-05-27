@@ -21,12 +21,14 @@
 
     <!--Page title-->
     <h1 class = "text-4xl text-center font-semibold tracking-normal font-sans mt-10 mb-10 md:pl-10 md:pt-14 md:text-5xl ">Upload Image from Your Computer</h1>
-
+    <img id="preview" class=" rounded-lg" style="display:none;" alt="Image preview"> <!--this element will be used for image preview-->
     <!--Form container-->
     <div class="bg-raisin-black outline outline-offset-2 outline-1 rounded-2xl px-5 py-5 my-20  md:mt-10  md:px-20 md:py-5 ">
         <!-- form using Post method to send the data to the javascript -->
+
         <form  action="{{ url_for('upload_image') }}" method="post" enctype="multipart/form-data">
-            <input class=' '  type="file" name="file" id="file" accept="image/*">
+            <input class=' '  type="file" name="file" id="file" accept="image/*" onchange="previewImage(event)"> <!--onchange is added to call previewImage function-->
+           
             <input type="submit" value="Upload Image" class=" transition ease-in-out delay-100 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300  text-white font-medium py-2 px-4 rounded-lg  "></a>
             
         </form>
@@ -72,4 +74,29 @@
 
 </style>
 
+<script>
+    function previewImage(event){
+    const file = event.target.files[0]; //retrieve selected file
+    const preview = document.getElementById('preview'); //pinpoint the target element to show image preview
+
+    if(file){
+        const reader = new FileReader(); //reads the file data
+        //once the file is read, sets the src to the file data
+        reader.onload = function(e){ 
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+            preview.style.maxWidth = '100%';
+            preview.style.maxHeight = '300px';
+            localStorage.setItem('imageData',e.target.result);
+        }
+        reader.readAsDataURL(file);
+    }else{
+        preview.style.display ='none';
+    }
+}
+function goToNextPage(){
+    window.location.href='display_image.html';
+}
+
+</script>
 </html>
