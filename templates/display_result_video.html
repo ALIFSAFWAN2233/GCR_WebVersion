@@ -3,28 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <title>Predicted Chord Page For Video</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='output.css') }}">
 </head>
-<body>
+<body class = "bg-hero-bg-gradient text-white">
+    <!--Top bar-->
+    <div class = "fixed top-0 w-full bg-raisin-black py-4 px-6 fade-in-left-to-right rounded-b-md z-10">
+        <a href="{{url_for('index')}}" class = "text-white text-center font-semibold font-sans md:text-start">GCR_WebApp</a>
+    </div>
+
+   
+    <!--Main Content-->
+     
+    <div class ="mt-20 flex flex-col justify-center align-middle">
+        <h1 class="text-4xl text-center font-semibold tracking-normal font-sans" >Video Prediction Result</h1>
+         <video id="preview" class="rounded-lg mt-5 mx-28 lg:mx-72" style="max-width: auto; max-height: 400px;" alt="Video Preview" controls></video>
+    </div>
+    
+
+<div class="bg-dark-grey  p-6 rounded-lg shadow-lg max-w-4xl sm:mx-auto my-10 mx-5 ">  
     {% if chords_data %}
         {% for chord in chords_data %}
-            <h1>Predicted Chord: {{ chord.chord_name }}</h1>
-            <div>
-                <h2>{{ chord.desc_open }}</h2>
-                <img src="{{ chord.open_chord_image }}" alt="Open Chord Image">
+            <h1 class=" flex justify-center items-center bg-raisin-black text-2xl font-medium tracking-wide px-2 py-4 outline outline-offset-2 outline-1 rounded-2xl  " >Prediction: {{ chord.chord_name }}</h1>
+            <!--Extra Chord Information-->
+            <p class="text-lg mt-6">The {{chord.chord_name}} chord can be played in various ways. For beginners, its always recommended to start with 'open' shape chords.</p>
+
+            <div class = 'mt-4'>
+                <h2 class="text-xl font-semibold mb-4">Chord Name: {{ chord.desc_open }}</h2>
+                
+                <img class=" w-1/2 md:w-2/6 md:max-w-sm h-auto mb-6 mx-auto" src="{{ chord.open_chord_image }}" alt="Open Chord Image">
+            </div>
+            <h2 class="text-xl font-semibold mb-4">Triad</h2>
+            <p class="text-lg tracking-normal">One of the different way to play the same chord is by using triads. For more advanced guitarists, triads offers great versatility because it helps in inducing variations in the melody or music.</p>
+            <p class="text-lg">Some of the triads for the {{chord.chord_name}} chord's including it's tablature are listed below: </p>
+            <div class="mt-4">
+                <h2 class="text-lg font-semibold mb-4">{{ chord.desc_root }}</h2>
+                <img class=" w-1/2 md:w-2/6 md:max-w-sm h-auto mb-6 mx-auto" src="{{ chord.root_image }}" alt="Root Image">
             </div>
             <div>
-                <h2>{{ chord.desc_root }}</h2>
-                <img src="{{ chord.root_image }}" alt="Root Image">
+                <h2 class="text-lg font-semibold mb-4">{{ chord.desc_first }}</h2>
+                <img class=" w-1/2 md:w-2/6 md:max-w-sm h-auto mb-6 mx-auto" src="{{ chord.first_image }}" alt="First Inversion Image">
             </div>
             <div>
-                <h2>{{ chord.desc_first }}</h2>
-                <img src="{{ chord.first_image }}" alt="First Inversion Image">
+                <h2 class="text-lg font-semibold mb-4">{{ chord.desc_second }}</h2>
+                <img class=" w-1/2 md:w-2/6 md:max-w-sm h-auto mb-6 mx-auto" src="{{ chord.second_image }}" alt="Second Inversion Image">
             </div>
-            <div>
-                <h2>{{ chord.desc_second }}</h2>
-                <img src="{{ chord.second_image }}" alt="Second Inversion Image">
-            </div>
-            <div>
+            <div class="text-lg font-semibold mb-4" >
                 <h2>Tutorial Video</h2>
                 {% if chord.video_link %}
                     <a href="{{ chord.video_link }}">Watch Video</a>
@@ -36,5 +59,20 @@
     {% else %}
         <p>No chord data available.</p>
     {% endif %}
+</div>
+
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const videoData = localStorage.getItem('videoData');
+        const preview = document.getElementById('preview');
+    
+        if (videoData) {
+            preview.src = videoData;
+            preview.style.display = 'block';
+        } else {
+            preview.style.display = 'none';
+        }
+    });
+    </script>
 </html>

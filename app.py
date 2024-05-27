@@ -146,6 +146,7 @@ def render_chords_page(prediction):
             desc_first = first["description"]
             desc_second = second["description"]
 
+
             # Store chord information in a dictionary
             # Replace the base 64 images for url of the images
             chord_info = {

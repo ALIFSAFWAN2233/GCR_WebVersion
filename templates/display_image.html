@@ -3,26 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <title>Predicted Chord From Image Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='output.css') }}">
 </head>
-<body>
-    <h1>Predicted Chord</h1>
-    <h3>Predicted Guitar Chord: {{ predicted_chord }}</h3>
+<body class = "bg-hero-bg-gradient text-white">
+        <!--Top bar-->
+    <div class = "fixed top-0 w-full bg-raisin-black py-4 px-6 fade-in-left-to-right rounded-b-md z-10">
+        <p class = "text-white text-center font-semibold font-sans md:text-start">GCR_WebApp</p>
+    </div>
+    <!--Result Container-->
+    <div class="text-white flex flex-col justify-center items-center mt-20 px-5 " >
+        <h1 class="text-4xl text-center font-semibold tracking-normal font-sans animate-fade-in-top" >Prediction Result</h1>
+        <img id="preview" class="mt-8 rounded-lg" style="max-width: 100%; max-height: 300px;" alt="Image Preview">
+        <div class="bg-raisin-black outline outline-offset-2 outline-1 rounded-2xl my-10 px-10 py-3 hover:animate-bounce animate-fade-in-top" style="animation-delay:0.5s">
+            <h3 class="text-2xl font-medium tracking-wide">Prediction: {{ predicted_chord }}</h3>
+        </div>
+        
+    <h1 class="text-center text-2xl font-semibold tracking-normal font-sans animate-fade-in-top" style="animation-delay:1s">More About The Chord</h1>
+      
+    </div>
+<!-- Extra Chord Information Container -->
+<div class="bg-dark-grey  p-6 rounded-lg shadow-lg max-w-4xl sm:mx-auto my-10 mx-7 animate-fade-in-top" style="animation-delay:1.5s">
+    <h3 class="text-2xl font-bold mb-4">Chord Name: {{ chord_name }}</h3>
+    <p class="text-lg mb-6">The {{ chord_name }} chord can be played in different ways.</p>
+    
+    <h2 class="text-xl font-semibold mb-4">'open' {{ chord_name }} chord shape:</h2>
+    <p class="my-4 text-lg">For beginners, it is suited to use the 'open' shape.</p>
+    <img class=" w-1/2 md:w-full md:max-w-sm h-auto mb-6 mx-auto" src="{{ open_chord_image }}" alt="{{desc_open}}">
+    
+    <h2 class="text-xl font-semibold mb-4">Triads</h2>
+    <p class="text-lg mb-6">{{ chord_name }} can be played in triad shapes.</p>
+    <p class="my-4 text-lg">Triads offers great versatility for guitarists to make the song or melody seem more interesting rather than full 6-string strum. </p>
+    
+    <h2 class="text-lg font-semibold mb-4">Root Triad</h2>
+    <img class=" w-1/2 md:w-full md:max-w-sm h-auto mb-6 mx-auto" src="{{ root_image }}" alt="{{desc_root}}">
+    
+    <h2 class="text-lg font-semibold mb-4">First Inversion Triad</h2>
+    <img class=" w-1/2   md:w-full md:max-w-sm h-auto mb-6 mx-auto" src="{{ first_image }}" alt="{{desc_first}}">
+    
+    <h2 class="text-lg font-semibold mb-4">Second Inversion Triad</h2>
+    <img class=" w-1/2  md:w-full md:max-w-sm h-auto mx-auto" src="{{ second_image }}" alt="{{desc_second}}">
+</div>
 
-<h1>More About The Chord</h1>
 
-<h3>Chord Name: {{ chord_name }}</h3>
-<p> The {{ chord_name }} can be played in different way.</p>
-<h2>This is the standard 'open' shape to play {{ chord_name }} chord.</h2>
-<img src="{{ open_chord_image }}" alt="{{desc_open}}">
-<h2>Triads</h2>
-<p>{{ chord_name }} can be played in triads shape.</p>
-<h2>Root Triad</h2>
-<img src="{{ root_image }}" alt="{{desc_root}}">
-<h2>First Inversion Triad</h2>
-<img src="{{ first_image }}" alt="{{desc_first}}">
-<h2>Second Inversion Triad</h2>
-<img src="{{ second_image }}" alt="{{desc_second}}">
 
 
 </body>
+
+<style>
+        @keyframes fadeInFromBottom {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        50% {
+            opacity: 0.5;
+            transform: translateY(10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+    .fade-in-from-bottom {
+        animation: fadeInFromBottom 1s ease-out;
+    }
+
+
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const imageData = localStorage.getItem('imageData');
+    const preview = document.getElementById('preview');
+
+    if (imageData) {
+        preview.src = imageData;
+        preview.style.display = 'block';
+    } else {
+        preview.style.display = 'none';
+    }
+});
+</script>
 </html>
