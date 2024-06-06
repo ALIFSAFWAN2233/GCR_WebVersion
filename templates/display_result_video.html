@@ -14,12 +14,15 @@
    
     <!--Main Content-->
      
-    <div class ="mt-20 flex flex-col justify-center align-middle">
+    <div class ="mt-20 flex flex-col justify-center items-center ">
         <h1 class="text-4xl text-center font-semibold tracking-normal font-sans" >Video Prediction Result</h1>
          <video id="preview" class="rounded-lg mt-5 mx-28 lg:mx-72" style="max-width: auto; max-height: 400px;" alt="Video Preview" controls></video>
+        
+     </div>
+     <div class="mt-10 flex justify-center items-center">
+        <a class="text-center text-white text-lg transition ease-in-out delay-100 bg-blue-600 hover:-translate-y-1 hover:scale-110 hover:bg-white hover:text-dark-grey duration-300 font-medium py-2 px-4 rounded-lg inline-block max-w-full" href="{{ url_for('video_upload') }}">Submit Another Video</a>   
     </div>
     
-
 <div class="bg-dark-grey  p-6 rounded-lg shadow-lg max-w-4xl sm:mx-auto my-10 mx-5 ">  
     {% if chords_data %}
         {% for chord in chords_data %}

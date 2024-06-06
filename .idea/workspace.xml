@@ -4,17 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="696ecf5d-fc51-46e0-9637-72080da97dce" name="Changes" comment="add error handling">
-      <change afterPath="$PROJECT_DIR$/inversionsPic/B major second inversion tab.png" afterDir="false" />
+    <list default="true" id="696ecf5d-fc51-46e0-9637-72080da97dce" name="Changes" comment="Add preview images for all related pages to differentiate the input and result easily.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plan.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Plan.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/scripts.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/scripts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/ErrorPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/ErrorPage.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/display_image.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/display_image.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/display_result_video.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/display_result_video.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/upload_file.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/upload_file.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/video_upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/video_upload.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +74,7 @@
     &quot;Python.app.executor&quot;: &quot;Run&quot;,
     &quot;Python.quickstart.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Vue-implementation&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
@@ -278,12 +275,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app.py</url>
-          <line>38</line>
+          <line>48</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/app.py</url>
-          <line>52</line>
+          <line>62</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>

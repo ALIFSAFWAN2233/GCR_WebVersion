@@ -3,13 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Error Loading File Page</title>
+    <link rel="stylesheet" href="./static/output.css">
 </head>
-<body>
-    <h1>Error</h1>
-<p>It seems that there is a problem:</p>
-<p>The error is: {{ error_message }}</p>
-    <p>Please try again by uploading the file again.</p>
+<body class="bg-hero-bg-gradient fade-in-gradient">
 
-<a href="{{ url_for('index') }}">Redirect Back to Home</a>
+    <!--Top bar-->
+<div class = "fixed top-0 w-full bg-raisin-black py-4 px-6 fade-in-left-to-right  ">
+    
+    <p class = "text-white md:text-start font-semibold font-sans text-center">GCR_WebApp</p>
+
+</div>
+<div class="mt-20 text-white px-8">
+        <h1 class="text-6xl font-bold tracking-wide font-sans py-5">Error</h1>
+    <div class="  lg:text-center  mb-10 px-10 py-4 text-xl bg-raisin-black outline outline-1 outline-offset-2 rounded-xl ">
+            <p class="text-xl mb-4">It seems that there is a problem regarding the inferencing process </p>
+    <p class="text-xl mb-4">The error is: <span class="text-red-400"> {{ error_message }}</span></span></p> 
+        <p class="text-xl">Please try again by uploading the file again.</p>
+    </div>
+
+    <a class='lg:items-center text-white transition ease-in-out delay-100 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-green-500 duration-300  font-medium py-2 px-4 rounded-lg ' href="{{ url_for('index') }}">Redirect To Home</a> 
+</div>
+
 </body>
 </html>

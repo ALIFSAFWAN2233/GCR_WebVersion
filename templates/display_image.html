@@ -13,20 +13,25 @@
     <!--Result Container-->
     <div class="text-white flex flex-col justify-center items-center mt-20 px-5 " >
         <h1 class="text-4xl text-center font-semibold tracking-normal font-sans animate-fade-in-top" >Prediction Result</h1>
+        <!-- Image Preview -->
         <img id="preview" class="mt-8 rounded-lg" style="max-width: 100%; max-height: 300px;" alt="Image Preview">
         <div class="bg-raisin-black outline outline-offset-2 outline-1 rounded-2xl my-10 px-10 py-3 hover:animate-bounce animate-fade-in-top" style="animation-delay:0.5s">
             <h3 class="text-2xl font-medium tracking-wide">Prediction: {{ predicted_chord }}</h3>
         </div>
         
-    <h1 class="text-center text-2xl font-semibold tracking-normal font-sans animate-fade-in-top" style="animation-delay:1s">More About The Chord</h1>
+            <a class='mt-auto text-white text-lg transition ease-in-out delay-100 bg-blue-600 hover:-translate-y-1 hover:scale-110 hover:bg-white hover:text-dark-grey duration-300  font-medium py-2 px-4 rounded-lg' href="{{ url_for('upload_file') }}">Submit Another Picture</a>   
+      
+        
+
       
     </div>
 <!-- Extra Chord Information Container -->
-<div class="bg-dark-grey  p-6 rounded-lg shadow-lg max-w-4xl sm:mx-auto my-10 mx-7 animate-fade-in-top" style="animation-delay:1.5s">
-    <h3 class="text-2xl font-bold mb-4">Chord Name: {{ chord_name }}</h3>
+<div class="bg-dark-grey bg-opacity-70 p-6 rounded-lg shadow-lg max-w-4xl sm:mx-auto my-10 mx-7 animate-fade-in-top" style="animation-delay:1.5s">
+    <div class="text-center border-b border-gray-200 mb-4 px-10 ">
+    <h3 class="text-xl font-bold mb-4 ">Chord Name: {{ chord_name }}</h3>
     <p class="text-lg mb-6">The {{ chord_name }} chord can be played in different ways.</p>
-    
-    <h2 class="text-xl font-semibold mb-4">'open' {{ chord_name }} chord shape:</h2>
+    </div>
+    <h2 class="text-xl font-semibold mb-4">'Open' {{ chord_name }} Chord Shape</h2>
     <p class="my-4 text-lg">For beginners, it is suited to use the 'open' shape.</p>
     <img class=" w-1/2 md:w-full md:max-w-sm h-auto mb-6 mx-auto" src="{{ open_chord_image }}" alt="{{desc_open}}">
     
@@ -41,7 +46,7 @@
     <img class=" w-1/2   md:w-full md:max-w-sm h-auto mb-6 mx-auto" src="{{ first_image }}" alt="{{desc_first}}">
     
     <h2 class="text-lg font-semibold mb-4">Second Inversion Triad</h2>
-    <img class=" w-1/2  md:w-full md:max-w-sm h-auto mx-auto" src="{{ second_image }}" alt="{{desc_second}}">
+    <img class=" w-1/2  md:w-full md:max-w-sm h-auto mx-auto mb-8" src="{{ second_image }}" alt="{{desc_second}}">
 </div>
 
 
@@ -74,16 +79,20 @@
 
 </style>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const imageData = localStorage.getItem('imageData');
-    const preview = document.getElementById('preview');
 
-    if (imageData) {
-        preview.src = imageData;
-        preview.style.display = 'block';
-    } else {
-        preview.style.display = 'none';
-    }
-});
+document.addEventListener("DOMContentLoaded", function() {
+        const imageData = localStorage.getItem('imageData');
+        const preview = document.getElementById('preview');
+
+        if (imageData) {
+            preview.src = imageData;
+            preview.style.display = 'block';
+            localStorage.removeItem('imageData');
+                
+            } else {
+                console.log('No image data found in localStorage.');
+                preview.style.display = 'none';
+            }
+        });
 </script>
 </html>

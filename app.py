@@ -5,7 +5,7 @@ import os
 import cv2
 import numpy as np
 from PIL import Image
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, send_from_directory
 from ultralytics import YOLO
 import tensorflow as tf
 import tempfile
@@ -17,13 +17,23 @@ from database import fetch_chord_data, convert_bytes_to_base64
 
 app = Flask(__name__)
 
+
+
+
+
 chord_folder = os.path.join('static', 'chord_photo')
 #app.config['UPLOAD_FOLDER'] = 'upload/'
 app.config['UPLOAD_FOLDER'] = chord_folder
 
-modelSegment = YOLO('C:/Users/alifs/Desktop/FYP/GuitarChordRecognition/runs/detect/train29/weights/best.pt')
+# load custom-trained YOLO model 
+#modelSegment = YOLO('C:/Users/alifs/Desktop/FYP/GuitarChordRecognition/runs/detect/train29/weights/best.pt')
+modelSegment = YOLO('C:/Users/alifs/Desktop/FYP/GuitarChordRecognition/Notebooks/runs/detect/train/weights/last.pt') # new YOLO trained version
 modelClassifier = tf.keras.models.load_model(
     'C:/Users/alifs/Desktop/FYP/GuitarChordRecognition/CNN_CHORD_CLASSIFIER.keras')
+
+
+
+
 
 
 @app.route('/')
@@ -236,7 +246,7 @@ def upload_image():
         bboxSegment = modelSegment.predict(source=img_array_yolo)
 
         if bboxSegment is None or len(bboxSegment) == 0:
-            return render_template('ErrorPage.html', error_message="No Bounding Box Detected")
+            return render_template('ErrorPage.html', error_message="The image cannot be processed. 1.0") #No bounding box detected
 
         try:
 
@@ -283,7 +293,9 @@ def upload_image():
                                    second_image=second_image, desc_open=desc_open, desc_root=desc_root,
                                    desc_first=desc_first, desc_second=desc_second)
         except Exception as e:
-            return render_template('ErrorPage.html', error_message="Error because no bounding box detected 2.0")
+            #Error Bounding box not detected 2.0 - YOLO cant segmentize the image
+            return render_template('ErrorPage.html', error_message="Image cant be processed 2.0")
+                                                                   
 
     return render_template('ErrorPage.html', error_messsage="No file is detected and uploaded.")
 
@@ -359,6 +371,7 @@ def ensure_three_channels(image):
     elif image.shape[2] == 1:  # Check if the image has 1 channel (grayscale)
         image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
     return image
+
 
 
 if __name__ == '__main__':
