@@ -27,7 +27,9 @@ app.config['UPLOAD_FOLDER'] = chord_folder
 
 # load custom-trained YOLO model 
 #modelSegment = YOLO('C:/Users/alifs/Desktop/FYP/GuitarChordRecognition/runs/detect/train29/weights/best.pt')
-modelSegment = YOLO('C:/Users/alifs/Desktop/FYP/GuitarChordRecognition/Notebooks/runs/detect/train/weights/last.pt') # new YOLO trained version
+#modelSegment = YOLO('C:/Users/alifs/Desktop/FYP/GuitarChordRecognition/Notebooks/runs/detect/train/weights/last.pt') # new YOLO trained version
+#modelSegment = YOLO('C:/Users/alifs/Desktop/FYP/GuitarChordRecognition/Notebooks/runs/detect/train3/weights/last.pt') # new YOLO trained on Egohands dataset
+modelSegment = YOLO('C:/Users/alifs/Desktop/FYP/GuitarChordRecognition/Notebooks/runs/detect/train8/weights/last.pt')
 modelClassifier = tf.keras.models.load_model(
     'C:/Users/alifs/Desktop/FYP/GuitarChordRecognition/CNN_CHORD_CLASSIFIER.keras')
 
@@ -107,6 +109,7 @@ def upload_video():
                 predictions.append(prediction_class)
 
         video_capture.release()
+        os.remove(temp_file_path)
         #PREDICTION ACHIEVED
         print("Predictions: ", predictions)
 
@@ -276,7 +279,7 @@ def upload_image():
                 first = chord_Object.tablature_pictures[2]
                 second = chord_Object.tablature_pictures[3]
 
-                #html markup
+               
                 open_chord_image = convert_bytes_to_base64(open_chord["data"])
                 root_image = convert_bytes_to_base64(root["data"])
                 first_image = convert_bytes_to_base64(first["data"])
@@ -287,11 +290,13 @@ def upload_image():
                 desc_first = first["description"]
                 desc_second = second["description"]
 
+                thumbnail_link = extract_video_id(chord_Object.tutorial_video_link)
+
             return render_template('display_image.html', predicted_chord=predicted_class_name,
                                    chord_name=chord_Object.chord_name, video_link=chord_Object.tutorial_video_link,
                                    open_chord_image=open_chord_image, root_image=root_image, first_image=first_image,
                                    second_image=second_image, desc_open=desc_open, desc_root=desc_root,
-                                   desc_first=desc_first, desc_second=desc_second)
+                                   desc_first=desc_first, desc_second=desc_second, thumbnail_id = thumbnail_link)
         except Exception as e:
             #Error Bounding box not detected 2.0 - YOLO cant segmentize the image
             return render_template('ErrorPage.html', error_message="Image cant be processed 2.0")
@@ -372,6 +377,20 @@ def ensure_three_channels(image):
         image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
     return image
 
+import re
+
+def extract_video_id(url):
+    # Regular expression to extract the video ID
+    video_id_pattern = r"v=([a-zA-Z0-9_-]+)"
+    
+    # Search for the pattern in the URL
+    match = re.search(video_id_pattern, url)
+    
+    # If a match is found, return the video ID
+    if match:
+        return match.group(1)
+    else:
+        return None
 
 
 if __name__ == '__main__':
