@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="696ecf5d-fc51-46e0-9637-72080da97dce" name="Changes" comment="Add preview images for all related pages to differentiate the input and result easily.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/ErrorPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/ErrorPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/display_image.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/display_image.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/display_result_video.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/display_result_video.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/upload_file.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/upload_file.html" afterDir="false" />
-    </list>
+    <list default="true" id="696ecf5d-fc51-46e0-9637-72080da97dce" name="Changes" comment="UPDATE OVERALL SYSTEM" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -235,7 +227,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715702433173</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="UPDATE OVERALL SYSTEM">
+      <option name="closed" value="true" />
+      <created>1717638141656</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1717638141656</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -268,7 +268,8 @@
     <MESSAGE value="Added relevant document to the mongoDB." />
     <MESSAGE value="Add methods for fetching extra chord information from MongoDB database and display it at display" />
     <MESSAGE value="add error handling" />
-    <option name="LAST_COMMIT_MESSAGE" value="add error handling" />
+    <MESSAGE value="UPDATE OVERALL SYSTEM" />
+    <option name="LAST_COMMIT_MESSAGE" value="UPDATE OVERALL SYSTEM" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
