@@ -37,7 +37,7 @@ class Chord:
 
 
 def fetch_chord_data(prediction):
-    uri = ("mongodb+srv://AlifDB:alifnadillah1404@chorddatabase.t0jwv4a.mongodb.net/?retryWrites=true&w=majority"
+    uri = ("mongodb+srv://***********@chorddatabase.t0jwv4a.mongodb.net/?retryWrites=true&w=majority"
            "&appName=ChordDatabase")
     try:
         # Establish connection
