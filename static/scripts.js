@@ -20,11 +20,28 @@ window.addEventListener('DOMContentLoaded', () => {
                 console.log('Server response data:', data); // Debugging log
                 if (data.success) {
                     alert('Video uploaded successfully!');
-                    const queryParams = new URLSearchParams({
-                        chords_data: JSON.stringify(data.chords_data)
+                    //query string need to be changed cause of the length limitation of GET
+                    //need to use POST method
+                    
+                    //const queryParams = new URLSearchParams({
+                    //    chords_data: JSON.stringify(data.chords_data)
+                    //});
+
+                    // Send chords data to /display_result_video using POST request
+                    const displayResponse = await fetch('/display_result_video', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ chords_data: data.chords_data })
                     });
-                    console.log('Redirecting to:', `/display_result_video?${queryParams.toString()}`); // Debugging log
-                    window.location.href = `/display_result_video?${queryParams.toString()}`;
+
+                    const displayHtml = await displayResponse.text();
+
+                    // Replace the current document with the new HTML content
+                    document.open();
+                    document.write(displayHtml);
+                    document.close();
                 } else {
                     alert('Error: ' + data.error);
                 }

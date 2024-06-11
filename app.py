@@ -35,9 +35,6 @@ modelClassifier = tf.keras.models.load_model(
 
 
 
-
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -47,6 +44,9 @@ def index():
 def upload_file():
     return render_template('upload_file.html')
 
+@app.route('/real_time')
+def real_time():
+    return render_template('real_time.html')
 
 #@app.route('/webcam-capture')
 #def webcam_capture():
@@ -183,13 +183,14 @@ def render_chords_page(prediction):
     return chords_data
 
 
-@app.route('/display_result_video', methods=['GET'])
+@app.route('/display_result_video', methods=['POST']) #change the method to POST method
 def display_result_video():
-    chords_data = request.args.get('chords_data')
+    chords_data = request.json.get('chords_data')
     if chords_data:
-        chords_data = json.loads(chords_data)
-    print("Chords Data received in /display_result_video:", chords_data)  # Debugging log
-    return render_template('display_result_video.html', chords_data=chords_data)
+       print("Chords Data received in /display_result_video:", chords_data)  # Debugging log
+       return render_template('display_result_video.html', chords_data=chords_data)
+    else:
+        return "No chords data available", 400
 
 
 def shortlist_chord(predArray):
@@ -303,6 +304,31 @@ def upload_image():
                                                                    
 
     return render_template('ErrorPage.html', error_messsage="No file is detected and uploaded.")
+
+@app.route('/realPredict', methods=['POST'])
+def predict():
+    data = request.json
+    image_data = data['image'].split(',')[1]
+    image = base64.b64decode(image_data)
+    nparr = np.frombuffer(image, np.uint8)
+    frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+
+    bboxSegment = modelSegment.predict(source=frame)
+    cropped = extract_bounding_box(bboxSegment)
+    if cropped is None:
+        return jsonify({"success": False, "error": "No bounding box detected"})
+    else:
+        #Apply sobel and appropriate preprocessing for classifier
+        feature_extracted_img = preprocess_classifier(cropped)
+
+        #Classifier perform prediction
+        prediction = modelClassifier.predict(feature_extracted_img)
+
+        predicted_class_name = determine_chord(prediction)
+
+    return jsonify({"success":True, "chord":predicted_class_name})
+
 
 
 def extract_bounding_box(boundingbox):

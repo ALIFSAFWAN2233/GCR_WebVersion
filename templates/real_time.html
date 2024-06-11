@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Real-Time Chord Recognition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='output.css') }}">
+</head>
+<body class="bg-hero-bg-gradient text-white">
+    <!--Top bar-->
+    <div class="fixed top-0 w-full bg-raisin-black py-4 px-6 fade-in-left-to-right rounded-b-md z-10">
+        <a href="{{ url_for('index') }}" class="text-white text-center font-semibold font-sans md:text-start">GCR_WebApp</a>
+    </div>
+
+    <!--Main Content-->
+    <div class="mt-20 flex flex-col justify-center items-center">
+        <h1 class="text-4xl text-center font-semibold tracking-normal font-sans">Real-Time Chord Recognition</h1>
+        <video id="video" class="rounded-lg mt-5 mx-28 lg:mx-72" style="max-width: auto; max-height: 400px;" autoplay></video>
+        <canvas id="canvas" style="display:none;"></canvas>
+        <div id="chord-data" class="mt-5 p-10 bg-raisin-black rounded-lg text-white"></div>
+    </div>
+    <div class="mt-10 flex justify-center items-center">
+        <a class="text-center text-white text-lg transition ease-in-out delay-100 bg-blue-600 hover:-translate-y-1 hover:scale-110 hover:bg-white hover:text-dark-grey duration-300 font-medium py-2 px-4 rounded-lg inline-block max-w-full" href="{{ url_for('/')}}">Back to Home</a>
+    </div>
+
+
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const chordDataDiv = document.getElementById('chord-data');
+
+    // Request access to the webcam
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+            video.srcObject = stream;
+            video.play();
+            captureFrame();
+        })
+        .catch((err) => {
+            console.error('Error accessing webcam: ', err);
+        });
+
+    function captureFrame() {
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const frame = canvas.toDataURL('image/jpeg');
+
+        fetch('/realPredict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ image: frame })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Chord: ', data.chord);
+                // Update the UI with the detected chord
+                updateChordData(data.chord);
+            } else {
+                console.error('Error:', data.error);
+            }
+            // Capture next frame after a short delay
+            setTimeout(captureFrame, 100);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Capture next frame after a short delay even if there's an error
+            setTimeout(captureFrame, 100);
+        });
+    }
+
+    function updateChordData(chord) {
+        chordDataDiv.textContent = `Predicted Chord: ${chord}`;
+    }
+});
+
+</script>
+
+    <!--Bottom Bar-->
+    <div class="fixed bottom-0 w-full bg-raisin-black py-4 px-6 text-white fade-in-left-to-right rounded-b-md">
+        <div class="container mx-auto flex justify-between items-center font-medium">
+            <p>FYP PROJECT</p>
+            <p>By Alif Safwan</p>
+        </div>
+    </div>
+</body>
+</html>

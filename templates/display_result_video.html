@@ -26,7 +26,7 @@
 <div class="bg-dark-grey  p-6 rounded-lg shadow-lg max-w-4xl sm:mx-auto my-10 mx-5 ">  
     {% if chords_data %}
         {% for chord in chords_data %}
-            <h1 class=" flex justify-center items-center bg-raisin-black text-2xl font-medium tracking-wide px-2 py-4 outline outline-offset-2 outline-1 rounded-2xl  " >Prediction: {{ chord.chord_name }}</h1>
+            <h1 class=" flex justify-center items-center bg-raisin-black text-2xl font-medium tracking-wide px-2 py-4 outline outline-offset-2 outline-1 rounded-2xl mt-5 " >Prediction: {{ chord.chord_name }}</h1>
             <!--Extra Chord Information-->
             <p class="text-lg mt-6">The {{chord.chord_name}} chord can be played in various ways. For beginners, its always recommended to start with 'open' shape chords.</p>
 
@@ -53,7 +53,12 @@
             <div class="text-lg font-semibold mb-4" >
                 <h2>Tutorial Video</h2>
                 {% if chord.video_link %}
-                    <a href="{{ chord.video_link }}">Watch Video</a>
+                <div class = "flex flex-col justify-center items-center ">
+                     <a href="{{ chord.video_link }}">
+                        <img src="https://img.youtube.com/vi/{{ thumbnail_id }}/0.jpg" alt="Video Thumbnail" class="video-thumbnail mb-4">
+                    </a>
+                </div>
+                   
                 {% else %}
                     <p>No tutorial video available.</p>
                 {% endif %}
